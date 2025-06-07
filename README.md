@@ -86,14 +86,29 @@ R4(config-if)# ipv6 address fd10:0:3::1/64
 R4(config-if)# no shutdown
 R4(config-if)# exit
 
+! BARU: Konfigurasi Interface FastEthernet untuk Server (dari HWIC-4ESW)
+! Konfigurasi port untuk DNS Server
+R4(config)# interface fastEthernet 0/1/0
+R4(config-if)# switchport mode access
+R4(config-if)# switchport access vlan 10
+R4(config-if)# no shutdown
+R4(config-if)# exit
 
-R4(config)# interface gigabitEthernet 0/2/0
-R4(config-if)# ip address 10.0.4.1 255.255.255.252
+! Konfigurasi port untuk Web Server
+R4(config)# interface fastEthernet 0/1/1
+R4(config-if)# switchport mode access
+R4(config-if)# switchport access vlan 10
+R4(config-if)# no shutdown
+R4(config-if)# exit
+
+! Konfigurasi VLAN Interface untuk Server (VLAN akan otomatis terbuat)
+R4(config)# interface vlan 10
+R4(config-if)# ip address 192.168.10.97 255.255.255.248
 R4(config-if)# ipv6 address fd10:0:4::1/64
 R4(config-if)# no shutdown
 R4(config-if)# exit
 
-! Static routes ke semua subnet
+! Static routes ke semua subnet (tetap sama)
 R4(config)# ip route 192.168.1.0 255.255.255.192 10.0.1.2
 R4(config)# ip route 192.168.2.0 255.255.255.240 10.0.2.2
 R4(config)# ip route 192.168.3.0 255.255.255.192 10.0.3.2
@@ -103,6 +118,17 @@ R4(config)# ipv6 unicast-routing
 R4(config)# ipv6 route fd10:0:1:1::/64 fd10:0:1::2
 R4(config)# ipv6 route fd10:0:2:1::/64 fd10:0:2::2
 R4(config)# ipv6 route fd10:0:3:1::/64 fd10:0:3::2
+
+! DHCP Pool untuk Server (jika diperlukan static assignment)
+R4(config)# ip dhcp pool SERVER-POOL
+R4(dhcp-config)# network 192.168.10.96 255.255.255.248
+R4(dhcp-config)# default-router 192.168.10.97
+R4(dhcp-config)# dns-server 192.168.10.98
+R4(dhcp-config)# exit
+
+! Exclude server addresses (karena menggunakan static)
+R4(config)# ip dhcp excluded-address 192.168.10.96 192.168.10.103
+
 R4(config)# exit
 R4# write memory
 ```
