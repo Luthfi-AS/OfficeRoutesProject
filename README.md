@@ -399,52 +399,13 @@ Switch3(config)# exit
 Switch3# write memory
 ```
 
-### 3.4 Konfigurasi Server-SW (Management Switch)
-```
-Switch> enable
-Switch# configure terminal
-Switch(config)# hostname Server-SW
-Server-SW(config)#
-
-! Membuat VLAN Management
-Server-SW(config)# vlan 99
-Server-SW(config-vlan)# name Management
-Server-SW(config-vlan)# exit
-
-! Konfigurasi VLAN Interface untuk Management
-Server-SW(config)# interface vlan 99
-Server-SW(config-if)# ip address 192.168.10.97 255.255.255.248
-Server-SW(config-if)# no shutdown
-Server-SW(config-if)# exit
-
-! Set default gateway
-Server-SW(config)# ip default-gateway 10.0.4.1
-
-! Konfigurasi port untuk Server
-Server-SW(config)# interface range fastEthernet 0/1-2
-Server-SW(config-if-range)# switchport mode access
-Server-SW(config-if-range)# switchport access vlan 1
-Server-SW(config-if-range)# exit
-
-! Enable SSH untuk management
-Server-SW(config)# ip domain-name perusahaan.local
-Server-SW(config)# crypto key generate rsa
-Server-SW(config)# username admin privilege 15 secret admin123
-Server-SW(config)# line vty 0 15
-Server-SW(config-line)# login local
-Server-SW(config-line)# transport input ssh
-Server-SW(config-line)# exit
-Server-SW(config)# exit
-Server-SW# write memory
-```
-
 ## Fase 4: Konfigurasi Server
 
 ### 4.1 Konfigurasi DNS Server
 1. **Klik DNS Server → Desktop → IP Configuration**
    - IPv4 Address: `192.168.10.98`
    - Subnet Mask: `255.255.255.248`
-   - Default Gateway: `10.0.4.1`
+   - Default Gateway: F
    - DNS Server: `192.168.10.98` (dirinya sendiri)
 
 2. **IPv6 Configuration:**
@@ -463,7 +424,7 @@ Server-SW# write memory
 1. **Klik Web Server → Desktop → IP Configuration**
    - IPv4 Address: `192.168.10.99`
    - Subnet Mask: `255.255.255.248`
-   - Default Gateway: `10.0.4.1`
+   - Default Gateway: `192.168.10.97`
    - DNS Server: `192.168.10.98`
 
 2. **IPv6 Configuration:**
