@@ -8,9 +8,10 @@
    - 4x Router 2911 (untuk R1, R2, R3, R4)
    - Letakkan R4 di tengah sebagai Core Router
    - R1, R2, R3 di sekitar R4 sesuai layout lantai
+   - Pada R4, tambahkan modul HWIC-4ESW
 
 3. **Tambahkan Switch:**
-   - 4x Switch 2960 (Switch1, Switch2, Switch3, Server-SW)
+   - 3x Switch 2960 (Switch1, Switch2, Switch3)
    - Letakkan sesuai dengan lantai masing-masing
 
 4. **Tambahkan Server:**
