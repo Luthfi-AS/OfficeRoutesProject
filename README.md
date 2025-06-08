@@ -1,4 +1,4 @@
-# Panduan Konfigurasi Jaringan Perusahaan di Cisco Packet Tracer (Revisi)
+# Panduan Konfigurasi Jaringan Perusahaan di Cisco Packet Tracer 
 
 ## Fase 1: Persiapan dan Penempatan Perangkat
 
