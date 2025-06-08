@@ -275,22 +275,12 @@ Switch# configure terminal
 Switch(config)# hostname Switch1
 Switch1(config)#
 
-! Membuat VLAN Management
-Switch1(config)# vlan 99
-Switch1(config-vlan)# name Management
-Switch1(config-vlan)# exit
-
-! Konfigurasi VLAN Interface untuk Management
-Switch1(config)# interface vlan 99
-Switch1(config-if)# ip address 192.168.1.2 255.255.255.192
-Switch1(config-if)# no shutdown
-Switch1(config-if)# exit
 
 ! Set default gateway
 Switch1(config)# ip default-gateway 192.168.1.1
 
 ! Konfigurasi port untuk PC (access mode)
-Switch1(config)# interface range fastEthernet 0/2-16
+Switch1(config)# interface range fastEthernet 0/1-24
 Switch1(config-if-range)# switchport mode access
 Switch1(config-if-range)# switchport access vlan 1
 Switch1(config-if-range)# exit
@@ -306,9 +296,42 @@ Switch1(config)# crypto key generate rsa
 Switch1(config)# username admin privilege 15 secret admin123
 Switch1(config)# line vty 0 15
 Switch1(config-line)# login local
-Switch1(config-line)# transport input ssh
+Switch1(config-line)# transport input telnet
 Switch1(config-line)# exit
 Switch1(config)# exit
+
+Switch1# configure terminal
+Switch1(config)# interface vlan 1
+Switch1(config-if)# ip address 192.168.1.2 255.255.255.192
+Switch1(config-if)# no shutdown
+Switch1(config-if)# exit
+Switch1(config)# ip default-gateway 192.168.1.1
+
+Switch1(config)# interface range fastEthernet 0/2-16
+Switch1(config-if-range)# duplex full
+Switch1(config-if-range)# speed 100
+Switch1(config-if-range)# exit
+
+! Aktifkan Auto-MDIX untuk semua port FastEthernet
+Switch1(config)# interface range fastEthernet 0/1-24
+Switch1(config-if-range)# mdix auto
+Switch1(config-if-range)# exit
+
+Switch1(config)# interface gigabitEthernet 0/1
+Switch1(config-if)# duplex full
+Switch1(config-if)# speed 1000
+Switch1(config-if)# exit
+
+! Aktifkan Auto-MDIX untuk port GigabitEthernet
+Switch1(config)# interface gigabitEthernet 0/1
+Switch1(config-if)# mdix auto
+Switch1(config-if)# exit
+
+Switch1(config)# interface range fastEthernet 0/1-24
+Switch1(config-if-range)# mdix auto
+Switch1(config-if-range)# exit
+Switch1(config)# exit
+
 Switch1# write memory
 ```
 
@@ -319,22 +342,11 @@ Switch# configure terminal
 Switch(config)# hostname Switch2
 Switch2(config)#
 
-! Membuat VLAN Management
-Switch2(config)# vlan 99
-Switch2(config-vlan)# name Management
-Switch2(config-vlan)# exit
-
-! Konfigurasi VLAN Interface untuk Management
-Switch2(config)# interface vlan 99
-Switch2(config-if)# ip address 192.168.2.2 255.255.255.240
-Switch2(config-if)# no shutdown
-Switch2(config-if)# exit
-
 ! Set default gateway
 Switch2(config)# ip default-gateway 192.168.2.1
 
 ! Konfigurasi port untuk PC
-Switch2(config)# interface range fastEthernet 0/2-11
+Switch2(config)# interface range fastEthernet 0/1-24
 Switch2(config-if-range)# switchport mode access
 Switch2(config-if-range)# switchport access vlan 1
 Switch2(config-if-range)# exit
@@ -350,8 +362,32 @@ Switch2(config)# crypto key generate rsa
 Switch2(config)# username admin privilege 15 secret admin123
 Switch2(config)# line vty 0 15
 Switch2(config-line)# login local
-Switch2(config-line)# transport input ssh
+Switch2(config-line)# transport input telnet
 Switch2(config-line)# exit
+Switch2(config)# exit
+
+Switch2# configure terminal
+Switch2(config)# interface vlan 1
+Switch2(config-if)# ip address 192.168.2.2 255.255.255.240
+Switch2(config-if)# no shutdown
+Switch2(config-if)# exit
+Switch2(config)# ip default-gateway 192.168.2.1
+
+Switch2(config)# interface range fastEthernet 0/3-24
+Switch2(config-if-range)# mdix auto
+Switch2(config-if-range)# exit
+
+! Konfigurasi port untuk PC (hanya F0/2-11 yang digunakan)
+Switch2(config)# interface range fastEthernet 0/2-11
+Switch2(config-if-range)# duplex full
+Switch2(config-if-range)# speed 100
+Switch2(config-if-range)# exit
+
+! Konfigurasi uplink ke router
+Switch2(config)# interface gigabitEthernet 0/1
+Switch2(config-if)# duplex full
+Switch2(config-if)# speed 1000
+Switch2(config-if)# exit
 Switch2(config)# exit
 Switch2# write memory
 ```
@@ -363,22 +399,11 @@ Switch# configure terminal
 Switch(config)# hostname Switch3
 Switch3(config)#
 
-! Membuat VLAN Management
-Switch3(config)# vlan 99
-Switch3(config-vlan)# name Management
-Switch3(config-vlan)# exit
-
-! Konfigurasi VLAN Interface untuk Management
-Switch3(config)# interface vlan 99
-Switch3(config-if)# ip address 192.168.3.2 255.255.255.192
-Switch3(config-if)# no shutdown
-Switch3(config-if)# exit
-
 ! Set default gateway
 Switch3(config)# ip default-gateway 192.168.3.1
 
 ! Konfigurasi port untuk PC
-Switch3(config)# interface range fastEthernet 0/2-16
+Switch3(config)# interface range fastEthernet 0/1-24
 Switch3(config-if-range)# switchport mode access
 Switch3(config-if-range)# switchport access vlan 1
 Switch3(config-if-range)# exit
@@ -394,9 +419,34 @@ Switch3(config)# crypto key generate rsa
 Switch3(config)# username admin privilege 15 secret admin123
 Switch3(config)# line vty 0 15
 Switch3(config-line)# login local
-Switch3(config-line)# transport input ssh
+Switch3(config-line)# transport input telnet
 Switch3(config-line)# exit
 Switch3(config)# exit
+
+Switch3# configure terminal
+Switch3(config)# interface vlan 1
+Switch3(config-if)# ip address 192.168.3.2 255.255.255.192
+Switch3(config-if)# no shutdown
+Switch3(config-if)# exit
+Switch3(config)# ip default-gateway 192.168.3.1
+
+Switch3(config)# interface range fastEthernet 0/1-24
+Switch3(config-if-range)# mdix auto
+Switch3(config-if-range)# exit
+Switch3(config)# exit
+
+! Konfigurasi port untuk PC (F0/2-16 yang digunakan)
+Switch3(config)# interface range fastEthernet 0/2-16
+Switch3(config-if-range)# duplex full
+Switch3(config-if-range)# speed 100
+Switch3(config-if-range)# exit
+
+! Konfigurasi uplink ke router
+Switch3(config)# interface gigabitEthernet 0/1
+Switch3(config-if)# duplex full
+Switch3(config-if)# speed 1000
+Switch3(config-if)# exit
+
 Switch3# write memory
 ```
 
@@ -447,16 +497,6 @@ Untuk setiap PC di semua lantai:
 3. **Pilih Auto Config untuk IPv6**
 4. **Verifikasi IP yang diperoleh sesuai dengan range yang ditentukan**
 
-### 5.2 Verifikasi Range IP per Ruangan
-- **PC Administrasi (5 PC):** 192.168.1.6 - 192.168.1.10
-- **PC IT Support (5 PC):** 192.168.1.11 - 192.168.1.15  
-- **PC Keuangan (5 PC):** 192.168.1.16 - 192.168.1.20
-- **PC Marketing (5 PC):** 192.168.2.4 - 192.168.2.8
-- **PC Sales (5 PC):** 192.168.2.9 - 192.168.2.13
-- **PC Produksi (5 PC):** 192.168.3.6 - 192.168.3.10
-- **PC Quality Control (5 PC):** 192.168.3.11 - 192.168.3.15
-- **PC R&D (5 PC):** 192.168.3.16 - 192.168.3.20
-
 ## Fase 6: Testing dan Verifikasi
 
 ### 6.1 Test Konektivitas Dasar
@@ -480,10 +520,9 @@ Untuk setiap PC di semua lantai:
 ### 6.2 Test Management Access
 1. **SSH ke Switch dari PC IT Support:**
    ```
-   PC> ssh -l admin 192.168.1.2 (Switch1)
-   PC> ssh -l admin 192.168.2.2 (Switch2)
-   PC> ssh -l admin 192.168.3.2 (Switch3)
-   PC> ssh -l admin 192.168.10.97 (Server-SW)
+   PC> telnet 192.168.1.2 (Switch1)
+   PC> telnet 192.168.2.2 (Switch2)
+   PC> telnet 192.168.3.2 (Switch3)
    ```
 
 ### 6.3 Verifikasi Routing
@@ -498,55 +537,9 @@ Untuk setiap PC di semua lantai:
    PC> tracert 192.168.10.99
    ```
 
-## Fase 7: Dokumentasi dan Backup
 
-### 7.1 Backup Konfigurasi
-1. **Untuk setiap router dan switch:**
-   ```
-   Device# show running-config
-   Device# copy running-config startup-config
-   ```
 
-2. **Save Packet Tracer file dengan nama yang descriptive**
 
-### 7.2 Dokumentasi Final
-1. **Buat diagram topologi final**
-2. **Dokumentasikan semua IP address yang terpakai**
-3. **Buat troubleshooting guide untuk masalah umum**
 
-## Tips Troubleshooting
 
-### Masalah Umum dan Solusi:
-1. **PC tidak mendapat IP DHCP:**
-   - Periksa konfigurasi DHCP pool di router
-   - Pastikan interface router dalam status "no shutdown"
-   - Cek excluded addresses
 
-2. **Tidak bisa ping antar lantai:**
-   - Verifikasi routing di semua router
-   - Periksa default route configuration
-   - Pastikan semua interface aktif
-
-3. **SSH tidak bisa connect:**
-   - Pastikan SSH key sudah di-generate
-   - Verifikasi username dan password
-   - Cek IP address management VLAN
-
-4. **DNS tidak resolve:**
-   - Periksa DNS server configuration
-   - Pastikan PC menggunakan DNS server yang benar
-   - Verifikasi DNS records
-
-5. **IPv6 tidak mendapat address:**
-   - Pastikan `ipv6 unicast-routing` enabled di router
-   - Cek IPv6 ND prefix advertisement
-   - Verifikasi SLAAC configuration
-
-### Rangkuman Subnet yang Sudah Diperbaiki:
-- **Lantai 1:** 192.168.1.0/26 (tidak overlap)
-- **Lantai 2:** 192.168.2.0/28 (tidak overlap)
-- **Lantai 3:** 192.168.3.0/26 (tidak overlap)
-- **Server:** 192.168.10.96/29 (tidak overlap)
-- **Inter-Router:** menggunakan 10.0.x.0/30 (tidak overlap)
-
-Dengan mengikuti panduan ini secara sistematis, Anda akan berhasil membuat jaringan perusahaan yang fungsional tanpa konflik IP address dan dengan segmentasi yang baik serta manajemen yang terstruktur.
